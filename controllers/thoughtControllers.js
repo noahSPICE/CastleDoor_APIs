@@ -1,11 +1,11 @@
 // Imports
-const { User, Thought } = require("../models");
+const { user, thoughts } = require("../models");
 
 // Get all thoughts
 const thoughtController = {
   async getThoughts(req, res) {
     try {
-      const thoughts = await Thought.find();
+      const thoughts = await thoughts.find();
       return res.status(200).json(thoughts);
     } catch (err) {
       console.log(err);
@@ -16,7 +16,7 @@ const thoughtController = {
   // Get single thought
   async getThought(req, res) {
     try {
-      const thought = await Thought.findOne({ _id: req.params.thoughtId });
+      const thought = await thoughts.findOne({ _id: req.params.thoughtId });
 
       if (!thought) {
         return res.status(404).json({ message: "No thought with that ID" });
@@ -32,9 +32,9 @@ const thoughtController = {
   // Create thought
   async createThought(req, res) {
     try {
-      const thought = await Thought.create(req.body);
+      const thought = await thoughts.create(req.body);
 
-      const user = await User.findByIdAndUpdate(
+      const user = await user.findByIdAndUpdate(
         req.body.userId,
         { $addToSet: { thoughts: thought._id } },
         { runValidators: true, new: true }
@@ -50,7 +50,7 @@ const thoughtController = {
   // Update thought
   async updateThought(req, res) {
     try {
-      const thought = await Thought.findOneAndUpdate(
+      const thought = await thoughts.findOneAndUpdate(
         { _id: req.params.thoughtId },
         { $set: req.body },
         { runValidators: true, new: true }
@@ -70,7 +70,7 @@ const thoughtController = {
   // Delete thought
   async deleteThought(req, res) {
     try {
-      const thought = await Thought.findOneAndDelete({
+      const thought = await thoughts.findOneAndDelete({
         _id: req.params.thoughtId,
       });
 
@@ -90,7 +90,7 @@ const thoughtController = {
   // Add reaction
   async addReaction(req, res) {
     try {
-      const reaction = await Thought.findOneAndUpdate(
+      const reaction = await thoughts.findOneAndUpdate(
         { _id: req.params.thoughtId },
         { $addToSet: { reactions: req.body } },
         { runValidators: true }
@@ -110,7 +110,7 @@ const thoughtController = {
   // Delete reaction
   async deleteReaction(req, res) {
     try {
-      const reaction = await Thought.findOneAndUpdate(
+      const reaction = await thoughts.findOneAndUpdate(
         { _id: req.params.thoughtId },
         { $pull: { reactions: { _id: req.params.reactionId } } },
         { runValidators: true, new: true }
