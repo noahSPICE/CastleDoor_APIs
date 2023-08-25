@@ -1,24 +1,22 @@
 const router = require("express").Router();
 
-// Imports functions written in userController.js file
 const {
-  getusers,
-  getuser,
-  createuser,
+  getUsers,
+  getSingleUser,
+  createUser,
   updateUser,
   deleteUser,
   addFriend,
-  deleteFriend,
-} = require("../../controllers/userController");
+  removeFriend,
+} = require("../../controllers/userController.js");
 
-// Route -> http://localhost:3001/api/users
-router.route("/").get(getusers).post(createuser);
+// /api/users
+router.route("/").get(getUsers).post(createUser);
 
-// Route -> http://localhost:3001/api/users/:userId
-router.route("/:userId").get(getuser).put(updateUser).delete(deleteUser);
+// /api/users/:userId
+router.route("/:userId").get(getSingleUser).put(updateUser).delete(deleteUser);
 
-// Route -> http://localhost:3001/api/users/:userId/friends/:friendId
-router.route("/:userId/friends/:friendId").post(addFriend).delete(deleteFriend);
+// /api/users/:userId/friends/:friendId
+router.route("/:userId/friends/:friendId").post(addFriend).delete(removeFriend);
 
-// Exports
 module.exports = router;

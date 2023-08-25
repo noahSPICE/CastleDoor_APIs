@@ -1,19 +1,21 @@
 const { Schema, model } = require("mongoose");
 
-// User schema
 const userSchema = new Schema(
   {
     username: {
       type: String,
       unique: true,
       required: true,
-      trim: true,
+      trimmed: true,
     },
     email: {
       type: String,
       required: true,
       unique: true,
-      match: [/.+@.+\..+/, "Must have the format of an email!"],
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        "Please fill a valid email address",
+      ],
     },
     thoughts: [
       {
@@ -36,13 +38,10 @@ const userSchema = new Schema(
   }
 );
 
-// Increases friend count in User model object when friends are added by a user
 userSchema.virtual("friendCount").get(function () {
   return this.friends.length;
 });
 
-// Creates User model with userSchema
 const User = model("user", userSchema);
 
-// Exports
 module.exports = User;
